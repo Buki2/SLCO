@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=4,7 python -m torch.distributed.launch --nproc_per_node=2 --use_env train.py --config configs/SLCO_kbref.py
