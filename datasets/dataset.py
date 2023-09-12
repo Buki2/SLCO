@@ -100,7 +100,7 @@ class VGDataset(Dataset):
         with open(pseudo_annotations_path, 'r') as f:
             self.pseudo_annotation = json.load(f)
         # For model training, knowledge categories obtained from the Prompt-Based Retrieval module
-        knowledge_categories_path = osp.join(self.dataset_root, self.know_retrieval_results)
+        knowledge_categories_path = self.know_retrieval_results
         with open(knowledge_categories_path, 'r') as f:
             self.knowledge_category = json.load(f)
 

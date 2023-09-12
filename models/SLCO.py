@@ -332,7 +332,6 @@ class GroundTextBlock_multihop(nn.Module):
         visu_multi = fmodu_multi.view(B, -1, H*W).contiguous().permute(0,2,1)
         lang_multi = attn_lang_multi.permute(0,2,1)
         visu_lang_cross_attn_feat, visu_lang_cross_attn_score = func_attention(lang_multi, visu_multi, raw_feature_norm='softmax')
-        # visu_lang_cross_attn_feat_final = self.MLP1(visu_lang_cross_attn_feat).squeeze()  # TODO: add number
         visu_lang_cross_attn_feat_final = self.MLP1(visu_lang_cross_attn_feat)
         visu_lang_cross_attn_feat_final = F.softmax(visu_lang_cross_attn_feat_final, dim=2)
 
