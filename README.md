@@ -70,6 +70,26 @@ chmod +x ./test.sh
 ./test.sh
 ```
 
+## Fine-tune language model
+
+The fine-tuning code is built upon the huggingface's transformers. More information (e.g., required dependencies and libraries) can be found in this [README documentation](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/README.md).
+
+In contrast to its original random masking approach, our method involves entity-level masking, which requires modifications to certain vocabulary and tokenizer files. Here are the details:
+
+1. Clone Transformers (v4.22.0) repository. `git clone --branch v4.22.0 https://github.com/huggingface/transformers.git`
+2. Download BERT model.
+   1. Download three files `pytorch_model.bin, config.json, tokenizer_config.json` from [huggingface](https://huggingface.co/bert-large-uncased).
+   2. Download our revised files `vocab.txt, tokenizer.json` from [Google Drive](https://drive.google.com/drive/folders/1RP4B987SZABEL8xQsZMCMwjY0ycnvcQc?usp=drive_link).
+   3. Place these files in a new folder `transformers/bert_model/bert-large-uncased`.
+3. Download fine-tuning data `train_concept_webchild_shuffle.txt` from [Google Drive](https://drive.google.com/drive/folders/1RP4B987SZABEL8xQsZMCMwjY0ycnvcQc?usp=drive_link) and place it in the folder `transformers/bert_model`.
+4. Replace the file `transformers/examples/pytorch/language-modeling/run_mlm.py` with the corresponding file from [Google Drive](https://drive.google.com/drive/folders/17fcITpKXaTrW2gYEOsrcN9RFNr8Vmed0?usp=drive_link). In addition, download two files `mask_vocab.txt, mask_word_map_real_word.json` and place them in the same folder.
+5. Replace the file `transformers/src/transformers/data/data_collator.py` with the corresponding file from [Google Drive](https://drive.google.com/drive/folders/193R4-wu-jbYQcGT3DfOifUbScA31s_4u?usp=drive_link).
+6. Run the code. The output model in the folder `checkpoint-125120` is the same as the provided model in the folder `plm-checkpoint-125120`.
+```
+cd transformers
+CUDA_VISIBLE_DEVICES=0 python examples/pytorch/language-modeling/run_mlm.py --model_name_or_path bert_model/bert-large-uncased --train_file bert_model/train_concept_webchild_shuffle.txt --per_device_train_batch_size 128 --per_device_eval_batch_size 128 --do_train --do_eval --output_dir bert_model/bert-large-uncased-finetuned --line_by_line --pad_to_max_length --max_seq_length 16 --overwrite_output_dir --save_strategy epoch --num_train_epochs 30 --evaluation_strategy epoch
+```
+
 ## Citation
 
 If you find this resource helpful, please cite our paper and share our work.
